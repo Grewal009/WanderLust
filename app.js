@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
 const port = 8080;
+
+const Listing = require("./models/listing");
+
 const mongoose = require("mongoose");
-
 const MONGODB_URL = "mongodb://127.0.0.1:27017/wanderlust";
-
 async function main() {
   await mongoose.connect(MONGODB_URL);
 }
-
 main()
   .then(() => {
     console.log("connected to MongoDB");
