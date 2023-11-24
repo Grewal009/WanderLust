@@ -42,7 +42,7 @@ app.get("/listings/:id", async (req, res) => {
   res.render("show.ejs", { listing });
 });
 
-// add new listind
+// add new listing
 app.post("/listings", async (req, res) => {
   console.log(req.body.listing);
   const newListing = new Listing(req.body.listing);
@@ -66,11 +66,24 @@ app.get("/listings/:id/edit", async (req, res) => {
   res.render("edit.ejs", { listing });
 });
 
-// update listing
+// update listing route
 app.patch("/listings/:id", async (req, res) => {
   const { id } = req.params;
   const updateListing = req.body.listing;
   await Listing.findByIdAndUpdate(id, updateListing)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  res.redirect("/listings");
+});
+
+// delete route
+app.delete("/listings/:id", async (req, res) => {
+  const { id } = req.params;
+  await Listing.findByIdAndDelete(id)
     .then((res) => {
       console.log(res);
     })
