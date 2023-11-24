@@ -5,6 +5,7 @@ const port = 8080;
 const path = require("path");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
 
 const Listing = require("./models/listing");
 
@@ -21,15 +22,37 @@ main()
     console.log(err);
   });
 
+// index route
 app.get("/listings", async (req, res) => {
   const allListings = await Listing.find();
   res.render("index.ejs", { allListings });
 });
 
+// new route
+app.get("/listings/new", (req, res) => {
+  res.render("new.ejs");
+});
+
+//show listing route
 app.get("/listings/:id", async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("show.ejs", { listing });
+});
+
+// add new listind
+app.post("/listings", async (req, res) => {
+  console.log(req.body.listing);
+  const newListing = new Listing(req.body.listing);
+  await newListing
+    .save()
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  res.redirect("/listings");
 });
 
 app.listen(port, () => {
